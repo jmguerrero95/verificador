@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Test Wallet TRON</title></head>
+<body>
+  <h1>Verificar USDT TRC20</h1>
+  <form id="f">
+    <input id="addr" placeholder="Dirección TRON" required>
+    <button>Verificar</button>
+  </form>
+  <p id="out"></p>
+  <script>
+    document.getElementById('f').onsubmit = async e => {
+      e.preventDefault();
+      const a = document.getElementById('addr').value.trim();
+      document.getElementById('out').textContent = 'Verificando…';
+      try {
+        const r = await fetch('http://31.220.84.241:5000/check-wallet', {
+          method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({address:a})
+        });
+        const j = await r.json();
+        if(j.error){
+          document.getElementById('out').textContent = j.status ? `Resultado: ${j.status}` : `Error: ${j.error}`;  
+        }else{
+          location.href="http://31.220.84.241/verificador/informe_"+a+".pdf"
+        }
+        document.getElementById('out').textContent = j.status ? `Resultado: ${j.status}` : `Error: ${j.error}`;
+      } catch {
+        document.getElementById('out').textContent = 'Error de conexión';
+      }
+    };
+  </script>
+</body>
+</html>
